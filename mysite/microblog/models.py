@@ -29,3 +29,7 @@ class Post(models.Model):
     post_content = models.CharField(
         max_length = 256
     )
+
+class Follows(models.Model):
+    follower = models.ForeignKey(User,related_name='post_follower')
+    following = models.ForeignKey(User,related_name='post_creator')

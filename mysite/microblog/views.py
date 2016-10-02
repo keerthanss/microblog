@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .Serializers import UserSerializer ,PostSerializer
-from .models import User, Post
+from .models import User, Post, Follows
 from rest_framework import viewsets
 
 class UserGetViewSet(viewsets.ModelViewSet):
@@ -41,4 +41,12 @@ class PostGetViewSet (viewsets.ModelViewSet):
             queryset = queryset.filter(creator=username)
         if number is not None:
             queryset = queryset[:number]
+        return queryset
+
+class HomepageViewSet(viewsets.ModelViewSet):
+    serializer_class  =PostSerializer
+    def get_queryset(self):
+        username = self.request.query_params.get('username', None)
+        users_following = Follows.objects.values_list('following').filter(follower=username)
+        queryset = Post.objects.all().order_by('-timestamp').filter(creator__in= set(users_following))
         return queryset
