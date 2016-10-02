@@ -1,24 +1,24 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .Serializers import UserSerializer
-from .models import User
+from .Serializers import UserSerializer ,PostSerializer
+from .models import User, Post
 from rest_framework import viewsets
 
 class UserGetViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        #username = self.kwargs['username']
-        queryset = User.objects.all().order_by('-user_name')#.filter(user_name=username)
+
+        queryset = User.objects.all().order_by('-user_name')
         username = self.request.query_params.get('username', None)
 
         if username is not None:
             queryset = queryset.filter(user_name = username)
-        return queryset
+
 
         return queryset
 
-    #queryset= User.objects.all().order_by('-user_name').filter(user_name='deepak')
+
 class UserInsertViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     def get_queryset(self):
@@ -31,6 +31,14 @@ class UserInsertViewSet(viewsets.ModelViewSet):
         queryset = User.objects.all()
         return queryset
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the microblog index.")
-# Create your views here.
+class PostGetViewSet (viewsets.ModelViewSet):
+    serializer_class = PostSerializer
+    def get_queryset(self):
+        username = self.request.query_params.get('username', None)
+        number = self.request.query_params.get('number', None)
+        queryset = Post.objects.all().order_by('-timestamp')
+        if username is not None:
+            queryset = queryset.filter(creator=username)
+        if number is not None:
+            queryset = queryset[:number]
+        return queryset

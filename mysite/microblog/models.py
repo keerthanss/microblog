@@ -24,7 +24,7 @@ class Post(models.Model):
     timestamp = models.DateTimeField(
         default = datetime.now)
     privacy = models.CharField(
-        max_length = 5
+        max_length = 10
     )
     post_content = models.CharField(
         max_length = 256
