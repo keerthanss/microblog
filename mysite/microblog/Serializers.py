@@ -10,7 +10,7 @@ class PostSerializer (serializers.ModelSerializer):
         model = Post
         fields = ('post_id','creator','timestamp','privacy','post_content')
 
-class FollowsSerializer:
+class FollowsSerializer (serializers.ModelSerializer):
     class Meta:
         model = Follows
         fields=('follower','following')

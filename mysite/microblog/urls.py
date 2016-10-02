@@ -9,7 +9,8 @@ router = routers.DefaultRouter()
 router.register(r'users/get',UserGetViewSet,'user')
 router.register(r'users/insert',UserInsertViewSet,'user')
 router.register(r'posts/get',PostGetViewSet,'post')
-router.register(r'home',HomepageViewSet,'post')
+router.register(r'home',HomepageViewSet,'post') #home page
+router.register (r'follow',FollowsViewSet,'follows')
 
 urlpatterns = [
     url(r'^',include(router.urls)),

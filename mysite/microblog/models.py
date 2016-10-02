@@ -33,3 +33,4 @@ class Post(models.Model):
 class Follows(models.Model):
     follower = models.ForeignKey(User,related_name='post_follower')
     following = models.ForeignKey(User,related_name='post_creator')
+    

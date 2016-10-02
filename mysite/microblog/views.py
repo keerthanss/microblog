@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .Serializers import UserSerializer ,PostSerializer
+from .Serializers import *
 from .models import User, Post, Follows
 from rest_framework import viewsets
 
@@ -49,4 +49,17 @@ class HomepageViewSet(viewsets.ModelViewSet):
         username = self.request.query_params.get('username', None)
         users_following = Follows.objects.values_list('following').filter(follower=username)
         queryset = Post.objects.all().order_by('-timestamp').filter(creator__in= set(users_following))
+        return queryset
+
+class FollowsViewSet(viewsets.ModelViewSet):
+    serializer_class=FollowsSerializer
+    def get_queryset(self):
+        followerUsername=self.request.query_params.get('follower', None)
+        followerObject = User.objects.get(user_name = followerUsername)
+        followingUsername = self.request.query_params.get('following', None)
+        followingObject = User.objects.get(user_name = followingUsername)
+        if followerObject is not None and followingObject is not None:
+            follow = Follows(follower=followerObject,following=followingObject)
+            follow.save()
+        queryset = Follows.objects.all().order_by('-id')[:1]
         return queryset
