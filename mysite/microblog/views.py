@@ -58,6 +58,16 @@ class FollowsViewSet(viewsets.ModelViewSet):
         followerObject = User.objects.get(user_name = followerUsername)
         followingUsername = self.request.query_params.get('following', None)
         followingObject = User.objects.get(user_name = followingUsername)
+
+        #avoid duplicates
+        allFollowing = Follows.objects.all().filter(follower=followerObject)
+        allFollowing = allFollowing.filter(following = followingObject)
+        if len(allFollowing) >0:
+            return allFollowing
+
+        #avoid a person following themselves
+        if followerObject ==followingObject:
+            return allFollowing
         if followerObject is not None and followingObject is not None:
             follow = Follows(follower=followerObject,following=followingObject)
             follow.save()
