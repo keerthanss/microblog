@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import User, Post, Follows
+from models import *
 class UserSerializer (serializers.ModelSerializer):
     class Meta:
         model = User
@@ -14,3 +14,8 @@ class FollowsSerializer (serializers.ModelSerializer):
     class Meta:
         model = Follows
         fields=('follower','following')
+
+class SavesSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = Saves
+        fields = ('user','post','timestamp')
