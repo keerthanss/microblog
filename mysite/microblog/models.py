@@ -24,7 +24,8 @@ class Post(models.Model):
     timestamp = models.DateTimeField(
         default = datetime.now)
     privacy = models.CharField(
-        max_length = 10
+        max_length = 10,
+        default="pub"
     )
     post_content = models.CharField(
         max_length = 256
@@ -33,4 +34,3 @@ class Post(models.Model):
 class Follows(models.Model):
     follower = models.ForeignKey(User,related_name='post_follower')
     following = models.ForeignKey(User,related_name='post_creator')
-    
