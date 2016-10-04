@@ -114,3 +114,6 @@ class GetSavedPostViewSet(viewsets.ModelViewSet):
         if number is not None:
             queryset = queryset[:number]
         return queryset
+
+def index(request):
+    return render(request, 'microblog/login.html', {});
