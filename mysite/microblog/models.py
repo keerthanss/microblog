@@ -10,7 +10,7 @@ class User(models.Model):
     user_name= models.CharField(
         max_length = 30,
         primary_key = True)
-    password= models.CharField(
+    password = models.CharField(
         max_length = 30)
     profile_pic= models.CharField(max_length = 50)
     bio= models.CharField(max_length = 300)

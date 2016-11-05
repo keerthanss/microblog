@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from .Serializers import *
 from .models import User, Post, Follows, Saves
 from rest_framework import viewsets
+from .forms import LogInForm, RegisterForm
+from django.http import HttpResponseRedirect
+from .signIn import authenticate, register
 
 class UserGetViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
@@ -116,4 +119,28 @@ class GetSavedPostViewSet(viewsets.ModelViewSet):
         return queryset
 
 def index(request):
-    return render(request, 'microblog/login.html', {});
+    #check if it is a POST request
+    if request.method == 'POST':
+        register_form = RegisterForm(request.POST, auto_id=False)
+        login_form = LogInForm(request.POST, auto_id=False)
+        #check if either form has data
+        if login_form.is_valid():
+            data = login_form.cleaned_data
+            authenticate(request,data['username'], data['password'])
+            print login_form.cleaned_data
+            #TODO: change redirect url
+            return HttpResponseRedirect('/success')
+        elif register_form.is_valid():
+            data = register_form.cleaned_data
+            register(data['r_email'], data['r_username'], data['r_password'])
+            print register_form.cleaned_data
+            #TODO: change redirect url
+            return HttpResponseRedirect('/registered')
+        else: #none of the forms have valid data
+            print "invalid form"
+    #work with the GET request
+    else:
+        register_form = RegisterForm()
+        login_form = LogInForm()
+        context = {'login_form' : login_form, 'register_form' : register_form}
+    return render(request, 'microblog/login.html', context);
