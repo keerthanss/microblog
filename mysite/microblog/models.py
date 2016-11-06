@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 from datetime import datetime
 from django.db import models
+from django.contrib.auth.models import User as auth_user
+
 #admin user deepak, password testtesttest
 # Create your models here.
 class User(models.Model):
@@ -10,10 +12,9 @@ class User(models.Model):
     user_name= models.CharField(
         max_length = 30,
         primary_key = True)
-    password = models.CharField(
-        max_length = 30)
-    profile_pic= models.CharField(max_length = 50)
-    bio= models.CharField(max_length = 300)
+    userid = models.OneToOneField(auth_user, default=-1)
+    profile_pic = models.CharField(max_length = 50)
+    bio = models.CharField(max_length = 300)
 
 
 class Post(models.Model):

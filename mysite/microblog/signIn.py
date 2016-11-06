@@ -1,6 +1,7 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as auth_user
 from django.contrib.auth import authenticate as authenticateUser
 from django.contrib.auth import login as logInUser
+from .models import User
 
 def authenticate(request, u_username, u_password):
     user = authenticateUser(username=u_username, password=u_password)
@@ -12,6 +13,8 @@ def authenticate(request, u_username, u_password):
         return False
 
 def register(u_email, u_username, u_password):
-    newuser = User.objects.create_user(u_email, u_username, u_password)
+    newuser = auth_user.objects.create_user(email=u_email, username=u_username, password=u_password)
+    newuser_infoentry = User(user_name = newuser.username, userid_id = newuser.id)
     newuser.save()
+    newuser_infoentry.save()
     print "New user created!"
