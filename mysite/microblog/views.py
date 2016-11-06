@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .Serializers import *
 from rest_framework import viewsets
-from .forms import LogInForm, RegisterForm
+
 from django.http import HttpResponseRedirect
 from .signIn import authenticate, register
 from .logic import *
+from .forms import *
 
 def loginpage(request):
     #check if it is a POST request
@@ -41,10 +42,31 @@ def index(request):
     context = {'post_set': post_set}
     return render(request, 'microblog/index.html', context)
 '''
+def editProfile(request):
+    username = request.GET.get('username',None)
+
+    user_details = getUserDetails(username).first()
+    #return render (request, 'microblog/editprofile.html',context)
+
+    if request.method == 'POST':
+        form=EditProfileForm(request.POST)
+        if form.is_valid():
+            form=form.cleaned_data
+            user_details.profile_name=form['profile_name']
+            user_details.bio=form['bio']
+            user_details.save()
+            return HttpResponseRedirect('/microblog/profile')
+
+    else:
+        form = EditProfileForm(initial={'profile_name': user_details.profile_name ,'bio':user_details.bio})
+
+    return render(request, 'microblog/editprofile.html', {'form': form})
+
 
 def getPosts(request):
     username = request.GET.get('username',None)
     number =  request.GET.get('number')
+
     post_set= getPostDetails(username,number)
     context = {'post_set':post_set}
     return render(request, 'microblog/postlist.html', context)

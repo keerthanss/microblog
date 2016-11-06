@@ -21,6 +21,7 @@ urlpatterns = [
     #url(r'index', views.index, name='index'),
     url(r'^$', views.loginpage, name='index'),
     #url(r'^',include(router.urls)),
+    url(r'editprofile/', views.editProfile,name='editProfile'),
     url(r'posts/get', views.getPosts,name='postlist'),
     url(r'profile/', views.getProfile,name='profile'),
     url(r'saved/', views.getSavedPosts,name='postlist'),

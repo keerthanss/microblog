@@ -1,7 +1,7 @@
 {% extends 'microblog/header.html' %}
 <!DOCTYPE html>
 <html lang="en">
-<body>
+
   {% block body %}
   {{block.super}}
 <div class="container-fluid">
@@ -9,13 +9,19 @@
     <div class="col-sm-3 sidenav">
       {%if user_details %}
         {% for user in user_details %}
-          <h3>{{user.user_name}}</h3>
-          <h4>About Me</h4>
+          <h4>{{user.profile_name}}</h4>
+          <h5>{{user.user_name}}</h5>
+          <h5>About Me:</h5>
           <p>{{user.bio}}</p>
         {% endfor%}
       {%else%}
         <p> no username given</p>
       {%endif%}
+      <p>
+        <a href="/microblog/editprofile/" class="btn btn-info btn-lg">
+          <span class="glyphicon glyphicon-edit"></span> Edit
+        </a>
+      </p>
     </div>
 
     <div class="col-sm-9">
