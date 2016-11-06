@@ -81,6 +81,7 @@ class PostSaveViewSet(viewsets.ModelViewSet):
 
         queryset = Saves.objects.all().order_by('-timestamp')[:1]
         return queryset
+        
 class HomepageViewSet(viewsets.ModelViewSet):
     serializer_class  =PostSerializer
     def get_queryset(self):
@@ -99,4 +100,3 @@ class GetSavedPostViewSet(viewsets.ModelViewSet):
         username = self.request.query_params.get('username',None)
         number = self.request.query_params.get('number', None)
         return getSavedPostsByUser(username,number)
-        

@@ -21,9 +21,9 @@ urlpatterns = [
     #url(r'index', views.index, name='index'),
     url(r'^$', views.loginpage, name='index'),
     #url(r'^',include(router.urls)),
-    url(r'views/posts/get', views.getPosts,name='postlist'),
-    url(r'views/profile/', views.getProfile,name='postlist'),
-    url(r'views/saved/', views.getSavedPosts,name='postlist'),
+    url(r'posts/get', views.getPosts,name='postlist'),
+    url(r'profile/', views.getProfile,name='profile'),
+    url(r'saved/', views.getSavedPosts,name='postlist'),
     #url(r'^',include(viewrouter.urls)),
     url(r'^',include(apirouter.urls)),
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))

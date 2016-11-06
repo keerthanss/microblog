@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .Serializers import *
 from rest_framework import viewsets
@@ -15,10 +15,11 @@ def loginpage(request):
         #check if either form has data
         if login_form.is_valid():
             data = login_form.cleaned_data
-            authenticate(request,data['username'], data['password'])
+            print authenticate(request,data['username'], data['password'])
             print login_form.cleaned_data
             #TODO: change redirect url
-            return HttpResponseRedirect('/success')
+            #return HttpResponseRedirect('profile')
+            return redirect('profile')
         elif register_form.is_valid():
             data = register_form.cleaned_data
             register(data['r_email'], data['r_username'], data['r_password'])
@@ -53,6 +54,7 @@ def getProfile(request):
     user_details = getUserDetails(username)
     post_set  =getPostDetails(username,None)
     context =   {
+                'title' : 'Profile',
                 'user_details':user_details,
                 'post_set':post_set
                 }
