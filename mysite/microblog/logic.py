@@ -31,3 +31,30 @@ def getSavedPostsByUser(username,number):
     if number is not None:
         queryset = queryset[:number]
     return queryset
+def followUser(follower,following):
+    isFollowing=checkFollowing(follower,following)
+    if isFollowing:
+        return True
+    followerObject = User.objects.get(user_name = follower)
+    followingObject = User.objects.get(user_name = following)
+    if followerObject is not None and followingObject is not None:
+            follow = Follows(follower=followerObject,following=followingObject)
+            follow.save()
+    return True
+def unfollowUser(follower,following):
+    followerObject = User.objects.get(user_name = follower)
+    followingObject = User.objects.get(user_name = following)
+    allFollowing = Follows.objects.all().filter(follower=followerObject)
+    allFollowing = allFollowing.filter(following = followingObject)
+    if allFollowing:
+        allFollowing.delete()
+    return True
+
+def checkFollowing(follower, following):
+    followerObject = User.objects.get(user_name = follower)
+    followingObject = User.objects.get(user_name = following)
+    allFollowing = Follows.objects.all().filter(follower=followerObject)
+    allFollowing = allFollowing.filter(following = followingObject)
+    if len(allFollowing) >0:
+        return True
+    return False

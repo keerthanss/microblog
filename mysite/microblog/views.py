@@ -70,14 +70,35 @@ def getPosts(request):
     post_set= getPostDetails(username,number)
     context = {'post_set':post_set}
     return render(request, 'microblog/postlist.html', context)
+def unfollow(request):
+    follower=request.GET.get('follower', None)
+
+    following= request.GET.get('following', None)
+    unfollowUser(follower,following)
+    return HttpResponseRedirect('/microblog/profile/?username='+following)
+def follow(request):
+    follower=request.GET.get('follower', None)
+
+    following= request.GET.get('following', None)
+    followUser(follower,following)
+
+    return HttpResponseRedirect('/microblog/profile/?username='+following)
+
 
 def getProfile(request):
     username = request.GET.get('username',None)
+    isUsersProfile=False
+    if username == request.user.username:
+        isUsersProfile=True
     if username ==None:
         username = request.user.username
+        isUsersProfile=True
+    isFollowing = checkFollowing(request.user.username,username)
     user_details = getUserDetails(username)
     post_set  =getPostDetails(username,None)
     context =   {
+                'isfollowing':isFollowing,
+                'myprofile': isUsersProfile,
                 'title' : 'Profile',
                 'user_details':user_details,
                 'post_set':post_set

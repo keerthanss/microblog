@@ -12,7 +12,7 @@ apirouter.register(r'api/users/insert',UserInsertViewSet,'user')
 apirouter.register(r'api/posts/get',PostGetViewSet,'post')#of the form /posts/get/?username=USERNAME&number=NUMBER
 apirouter.register(r'api/home',HomepageViewSet,'post') #home page /home/?username=USERNAME&number=NUMBER
 apirouter.register(r'api/saved',GetSavedPostViewSet,'saves') #home page /saved/?username=USERNAME&number=NUMBER
-apirouter.register (r'api/follow',FollowsViewSet,'follows') #/follow/?follower=FOLLOWER&following=FOLLOWING
+apirouter.register (r'api/follow',FollowsViewSet,'follow-user') #/follow/?follower=FOLLOWER&following=FOLLOWING
 apirouter.register(r'api/posts/save',PostSaveViewSet,'saves')# saves the post /posts/save/?username=USERNAME&postid=POSTID
 
 
@@ -25,7 +25,8 @@ urlpatterns = [
     url(r'posts/get', views.getPosts,name='postlist'),
     url(r'profile/', views.getProfile,name='profile'),
     url(r'saved/', views.getSavedPosts,name='postlist'),
-    #url(r'^',include(viewrouter.urls)),
+    url(r'unfollow/', views.unfollow,name='unfollow'),
+    url(r'follow/', views.follow,name='follow'),
     url(r'^',include(apirouter.urls)),
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 
