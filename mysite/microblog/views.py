@@ -73,6 +73,8 @@ def getPosts(request):
 
 def getProfile(request):
     username = request.GET.get('username',None)
+    if username ==None:
+        username = request.user.username
     user_details = getUserDetails(username)
     post_set  =getPostDetails(username,None)
     context =   {
