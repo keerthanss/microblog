@@ -29,7 +29,11 @@ urlpatterns = [
     #url(r'^',include(viewrouter.urls)),
     url(r'unfollow/', views.unfollow,name='unfollow'),
     url(r'follow/', views.follow,name='follow'),
+    url(r'unsave/', views.unsave,name='unsave'),
+    url(r'save/', views.save,name='save'),
+
     url(r'^',include(apirouter.urls)),
+
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 
 ]

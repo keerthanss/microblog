@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .Serializers import *
 from rest_framework import viewsets
 from .forms import *
@@ -100,6 +100,7 @@ def getPosts(request):
     number =  request.GET.get('number')
 
     post_set= getPostDetails(username,number)
+    post_set = addSavedFieldToPostList(post_set,request.user.username)
     context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form}
     return render(request, 'microblog/homepage.html', context)
 
@@ -108,7 +109,7 @@ def unfollow(request):
 
     following= request.GET.get('following', None)
     unfollowUser(follower,following)
-    return HttpResponseRedirect('/microblog/profile/?username='+following)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def follow(request):
     follower=request.GET.get('follower', None)
@@ -116,7 +117,20 @@ def follow(request):
     following= request.GET.get('following', None)
     followUser(follower,following)
 
-    return HttpResponseRedirect('/microblog/profile/?username='+following)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+def save(request):
+
+    user = request.GET.get('username',None)
+    post = request.GET.get('post',None)
+    savePost(user,post)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def unsave(request):
+    user = request.GET.get('username',None)
+    post = request.GET.get('post',None)
+
+    unsavePost(user,post)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def getProfile(request):
     if not isAuthenticated(request):
@@ -131,6 +145,9 @@ def getProfile(request):
     isFollowing = checkFollowing(request.user.username,username)
     user_details = getUserDetails(username)
     post_set  =getPostDetails(username,None)
+    post_set = addSavedFieldToPostList(post_set,request.user.username)
+
+
     context =   {
                 'isfollowing':isFollowing,
                 'myprofile': isUsersProfile,

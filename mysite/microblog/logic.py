@@ -10,7 +10,15 @@ def getPostDetails(username,number):
     if number is not None:
         queryset = queryset[:number]
     return queryset
-
+def addSavedFieldToPostList(post_set, username):
+    saved_post_set = getSavedPostsByUser(username,None)
+    for post in post_set:
+        saved = False
+        for saved_post in saved_post_set:
+            if saved_post.post_id == post.post_id:
+                saved = True
+        post.saved=saved
+    return post_set
 def getUserDetails(username):
     queryset = User.objects.all().order_by('-user_name')
     if username is not None:
@@ -18,6 +26,29 @@ def getUserDetails(username):
     #else:
     #    queryset = queryset [:0]
     return queryset
+def savePost(user,post):
+    user = User.objects.get(user_name = user)
+    post = Post.objects.get(post_id = post)
+    if user is not None and post is not None:
+        postsSaved= Saves.objects.all().filter(user=user)
+        postsSaved= postsSaved.filter(post=post)
+        if len(postsSaved)>0:
+            return True
+        savePost=Saves(user=user,post=post)
+        savePost.save()
+        return True
+
+def unsavePost(user,post):
+        user = User.objects.get(user_name = user)
+        post = Post.objects.get(post_id = post)
+        
+        postsSaved= Saves.objects.all().filter(user=user)
+        postsSaved= postsSaved.filter(post=post)
+
+        if postsSaved:
+            postsSaved.delete()
+        return True
+
 
 def getSavedPostsByUser(username,number):
     if username is None:

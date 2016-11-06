@@ -15,7 +15,19 @@
               <div class="panel-body">
                 {{ post.post_content }}
                 <p class = "text-muted text-right small"><span class="glyphicon glyphicon-time"></span> {{post.timestamp}}</p>
+                  {%if post.saved %}
+                    <p class = "text-muted text-right ">
+
+                    <a href="/microblog/unsave/?username={{request.user.username}}&post={{post.post_id}}">
+                    <span class="glyphicon glyphicon-floppy-saved"></span></a> </p>
+                {%else%}
+                  <p class = "text-muted text-right ">
+
+                  <a href="/microblog/save/?username={{request.user.username}}&post={{post.post_id}}">
+                    <span class="glyphicon glyphicon-floppy-disk"></span></a> </p>
+                {%endif%}
               </div>
+
             </div>
             <br>
           {% endfor %}
