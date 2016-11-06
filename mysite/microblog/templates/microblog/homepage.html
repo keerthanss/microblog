@@ -12,17 +12,27 @@
       <div class="panel panel-default">
 
       <div class = "panel panel-default">
-        <div class="panel body">
-          <div>
-            <form>
-              <div class = "form-group">
-                <textarea rows="3" class="form-control" placeholder="Start a rypple..."></textarea>
-              </div>
-              <div class = "form-group">
+        <div class="panel-body">
+
+          <form method="POST">
+            {% csrf_token %}
+            <div class = "form-group">
+              {{ post_form.post_content.errors }}
+              {{ post_form.post_content }}
+            </div>
+
+            <div class="form-group">
+              <div class="form-inline">
+                <div class="checkbox">
+                  {{ post_form.public_privacy.errors }}
+                  <label for="{{ post_form.public_privacy.id_for_label }}">  {{ post_form.public_privacy }} Public</label>
+                </div>
                 <button class="btn btn-primary pull-right">Post</button>
               </div>
-            </form>
-          </div>
+            </div>
+
+          </form>
+
         </div>
       </div>
 
@@ -30,65 +40,17 @@
         {% if post_set %}
           {% for post in post_set %}
             <div class="panel panel-info">
-              <div class="panel title">
-                {{ post.creator_name }}
+              <div class="panel-heading">
+                <h3 class="panel-title">{{ post.creator.profile_name }}</h3>
               </div>
-              <div class="panel body">
+              <div class="panel-body">
                 {{ post.post_content }}
               </div>
             </div>
           {% endfor %}
         {% else %}
-          <div class = "panel panel-primary">
-          <div class = "panel-heading">
-          <h3 class = "panel-title">Panel title</h3>
-          </div>
-
-          <div class = "panel-body">
-          This is a Basic panel
-          </div>
-          </div>
-
-          <div class = "panel panel-success">
-          <div class = "panel-heading">
-          <h3 class = "panel-title">Panel title</h3>
-          </div>
-
-          <div class = "panel-body">
-          This is a Basic panel
-          </div>
-          </div>
-
-          <div class = "panel panel-info">
-          <div class = "panel-heading">
-          <h3 class = "panel-title">Panel title</h3>
-          </div>
-
-          <div class = "panel-body">
-          This is a Basic panel
-          </div>
-          </div>
-
-          <div class = "panel panel-warning">
-          <div class = "panel-heading">
-          <h3 class = "panel-title">Panel title</h3>
-          </div>
-
-          <div class = "panel-body">
-          This is a Basic panel
-          </div>
-          </div>
-
-          <div class = "panel panel-danger">
-          <div class = "panel-heading">
-          <h3 class = "panel-title">Panel title</h3>
-          </div>
-
-          <div class = "panel-body">
-          This is a Basic panel
-          </div>
-          </div>
-      {% endif %}
+          <p>No posts available to show</p>
+        {% endif %}
 
 
     </div>

@@ -18,6 +18,14 @@ class User(models.Model):
 
 
 class Post(models.Model):
+    PUBLIC = "PB"
+    PRIVATE = "PR"
+
+    PRIVACY_CHOICES = (
+        (PUBLIC, "Public"),
+        (PRIVATE, "Private")
+    )
+
     post_id = models.AutoField(
         primary_key = True
     )
@@ -25,8 +33,9 @@ class Post(models.Model):
     timestamp = models.DateTimeField(
         default = datetime.now)
     privacy = models.CharField(
-        max_length = 10,
-        default="pub"
+        max_length = 2,
+        choices = PRIVACY_CHOICES,
+        default=PUBLIC
     )
     post_content = models.CharField(
         max_length = 256

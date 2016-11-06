@@ -6,6 +6,7 @@ from .forms import *
 from django.http import HttpResponseRedirect
 from .signIn import authenticate, register
 from .logic import *
+from .models import Post
 
 def isAuthenticated(request):
     if request.user:
@@ -51,10 +52,29 @@ def index(request):
 def getPosts(request):
     if not isAuthenticated(request):
         return redirect('index')
+
+    #publish a post
+    if request.method == "POST":
+        post_form = PostForm(request.POST, auto_id=False)
+        if post_form.is_valid():
+            content = post_form.cleaned_data['post_content']
+            isPublic = post_form.cleaned_data['public_privacy']
+            if content.strip() != "":
+                privacy = Post.PUBLIC if isPublic else Post.PRIVATE
+                username = request.user.username
+                publishPost(u_username=username, u_post_content=content, u_privacy= privacy)
+                print "Post published!"
+            else:
+                print "Empty post cannot be published"
+        else:
+            print "invalid data"
+    else:
+        post_form = PostForm()
+
     username = request.GET.get('username',None)
     number =  request.GET.get('number')
     post_set= getPostDetails(username,number)
-    context = {'title' : 'Home', 'post_set':post_set}
+    context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form}
     return render(request, 'microblog/homepage.html', context)
 
 def getProfile(request):
