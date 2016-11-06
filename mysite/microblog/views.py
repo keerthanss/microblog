@@ -3,114 +3,32 @@ from django.http import HttpResponse
 from .Serializers import *
 from .models import User, Post, Follows, Saves
 from rest_framework import viewsets
+from .logic import *
+from django.shortcuts import render
 
-class UserGetViewSet(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
+def index(request):
+    post_set = Post.objects.all()
+    context = {'post_set': post_set}
+    return render(request, 'microblog/index.html', context)
 
-    def get_queryset(self):
-
-        queryset = User.objects.all().order_by('-user_name')
-        username = self.request.query_params.get('username', None)
-
-        if username is not None:
-            queryset = queryset.filter(user_name = username)
-
-
-        return queryset
-
-
-class UserInsertViewSet(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
-    def get_queryset(self):
-        username = self.request.query_params.get('username', None)
-        password = self.request.query_params.get('password', None)
-        pic = self.request.query_params.get('pic', None)
-        bio =self.request.query_params.get('bio', None)
-        user = User(username,password,pic,bio)
-        user.save()
-        queryset = User.objects.all()
-        return queryset
-
-class PostGetViewSet (viewsets.ModelViewSet):
-    serializer_class = PostSerializer
-    def get_queryset(self):
-        username = self.request.query_params.get('username', None)
-        number = self.request.query_params.get('number', None)
-        queryset = Post.objects.all().order_by('-timestamp')
-        if username is not None:
-            queryset = queryset.filter(creator=username)
-        if number is not None:
-            queryset = queryset[:number]
-        return queryset
-
-
-
-class FollowsViewSet(viewsets.ModelViewSet):
-    serializer_class=FollowsSerializer
-    def get_queryset(self):
-        followerUsername=self.request.query_params.get('follower', None)
-        followerObject = User.objects.get(user_name = followerUsername)
-        followingUsername = self.request.query_params.get('following', None)
-        followingObject = User.objects.get(user_name = followingUsername)
-
-        #avoid duplicates
-        allFollowing = Follows.objects.all().filter(follower=followerObject)
-        allFollowing = allFollowing.filter(following = followingObject)
-        if len(allFollowing) >0:
-            return allFollowing
-
-        #avoid a person following themselves
-        if followerObject ==followingObject:
-            return allFollowing
-        if followerObject is not None and followingObject is not None:
-            follow = Follows(follower=followerObject,following=followingObject)
-            follow.save()
-        queryset = Follows.objects.all().order_by('-id')[:1]
-        return queryset
-
-class PostSaveViewSet(viewsets.ModelViewSet):
-    #user specified by username saveas the post specified by postid
-    serializer_class = SavesSerializer
-    def get_queryset(self):
-        username = self.request.query_params.get('username',None)
-        postid = self.request.query_params.get('postid',None)
-        user = User.objects.get(user_name = username)
-        post = Post.objects.get(post_id = postid)
-
-        if user is not None and post is not None:
-            postsSaved= Saves.objects.all().filter(user=user)
-            postsSaved= postsSaved.filter(post=post)
-            if len(postsSaved)>0:
-                return postsSaved
-            savePost=Saves(user=user,post=post)
-            savePost.save()
-
-        queryset = Saves.objects.all().order_by('-timestamp')[:1]
-        return queryset
-class HomepageViewSet(viewsets.ModelViewSet):
-    serializer_class  =PostSerializer
-    def get_queryset(self):
-        username = self.request.query_params.get('username', None)
-        number = self.request.query_params.get('number', None)
-        users_following = Follows.objects.values_list('following').filter(follower=username)
-        queryset = Post.objects.all().order_by('-timestamp').filter(creator__in= set(users_following))
-        if number is not None:
-            queryset = queryset[:number]
-
-        return queryset
-
-class GetSavedPostViewSet(viewsets.ModelViewSet):
-    serializer_class = PostSerializer
-    def get_queryset(self):
-        username = self.request.query_params.get('username',None)
-
-        postsSaved= Saves.objects.all().filter(user=username)
-        l =[]
-        for p in postsSaved:
-            l.insert(0,p.post_id)
-
-        queryset = Post.objects.all().order_by('-timestamp').filter(post_id__in= set(l))
-        number = self.request.query_params.get('number', None)
-        if number is not None:
-            queryset = queryset[:number]
-        return queryset
+def getPosts(request):
+    username = request.GET.get('username',None)
+    number =  request.GET.get('number')
+    post_set= getPostDetails(username,number)
+    context = {'post_set':post_set}
+    return render(request, 'microblog/postlist.html', context)
+def getProfile(request):
+    username = request.GET.get('username',None)
+    user_details = getUserDetails(username)
+    post_set  =getPostDetails(username,None)
+    context =   {
+                'user_details':user_details,
+                'post_set':post_set
+                }
+    return render(request, 'microblog/profile.html',context)
+def getSavedPosts(request):
+    username = request.GET.get('username',None)
+    number =  request.GET.get('number')
+    post_set = getSavedPostsByUser(username,number)
+    context = {'post_set':post_set}
+    return render(request, 'microblog/postlist.html', context)
