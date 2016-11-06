@@ -1,0 +1,9 @@
+{% if post_set %}
+    <ul>
+    {% for post in post_set %}
+        <li><p>{{ post.creator.user_name   }}</p><p>{{post.post_content}}</p></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No posts are available.</p>
+{% endif %}
