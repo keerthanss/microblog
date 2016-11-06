@@ -18,6 +18,7 @@ def getUserDetails(username):
     #else:
     #    queryset = queryset [:0]
     return queryset
+
 def getSavedPostsByUser(username,number):
     if username is None:
         return None
@@ -31,6 +32,12 @@ def getSavedPostsByUser(username,number):
     if number is not None:
         queryset = queryset[:number]
     return queryset
+
+def publishPost(u_username, u_post_content, u_privacy=Post.PUBLIC):
+    author = getUserDetails(u_username).first()
+    new_post = Post(creator=author, privacy=u_privacy, post_content=u_post_content)
+    new_post.save()
+
 def followUser(follower,following):
     isFollowing=checkFollowing(follower,following)
     if isFollowing:
@@ -41,6 +48,7 @@ def followUser(follower,following):
             follow = Follows(follower=followerObject,following=followingObject)
             follow.save()
     return True
+
 def unfollowUser(follower,following):
     followerObject = User.objects.get(user_name = follower)
     followingObject = User.objects.get(user_name = following)

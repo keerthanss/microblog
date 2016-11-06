@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import Textarea
 
 class LogInForm(forms.Form):
     username = forms.CharField(widget = forms.TextInput(attrs={'placeholder':'Username', 'required' : True}),
@@ -15,6 +16,16 @@ class RegisterForm(forms.Form):
     r_password = forms.CharField( label="Password",
                                 widget = forms.PasswordInput(attrs={'placeholder':'Password', 'required' : True}),
                                     max_length=30)
+
+class PostForm(forms.Form):
+    post_content = forms.CharField(widget = Textarea(attrs={
+                                                        'rows': 3,
+                                                        'class':'form-control',
+                                                        'placeholder':'Start a Rypple..'
+                                                    }),
+                                    max_length = 256)
+    public_privacy = forms.BooleanField(required=False)
+
 class EditProfileForm(forms.Form):
-    profile_name = forms.CharField(label='Profile Name', max_length=100)   
+    profile_name = forms.CharField(label='Profile Name', max_length=100)
     bio = forms.CharField(widget=forms.Textarea , label='bio')

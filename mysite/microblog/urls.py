@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'posts/get', views.getPosts,name='postlist'),
     url(r'profile/', views.getProfile,name='profile'),
     url(r'saved/', views.getSavedPosts,name='postlist'),
+    url(r'home/', views.getPosts, name='homepage'),
+    #url(r'^',include(viewrouter.urls)),
     url(r'unfollow/', views.unfollow,name='unfollow'),
     url(r'follow/', views.follow,name='follow'),
     url(r'^',include(apirouter.urls)),

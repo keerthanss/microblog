@@ -2,6 +2,17 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .Serializers import *
 from rest_framework import viewsets
+from .forms import *
+from django.http import HttpResponseRedirect
+from .signIn import authenticate, register
+from .logic import *
+from .models import Post
+
+def isAuthenticated(request):
+    if request.user:
+        if request.user.is_authenticated:
+            return True
+    return False
 
 from django.http import HttpResponseRedirect
 from .signIn import authenticate, register
@@ -64,18 +75,41 @@ def editProfile(request):
 
 
 def getPosts(request):
+    if not isAuthenticated(request):
+        return redirect('index')
+
+    #publish a post
+    if request.method == "POST":
+        post_form = PostForm(request.POST, auto_id=False)
+        if post_form.is_valid():
+            content = post_form.cleaned_data['post_content']
+            isPublic = post_form.cleaned_data['public_privacy']
+            if content.strip() != "":
+                privacy = Post.PUBLIC if isPublic else Post.PRIVATE
+                username = request.user.username
+                publishPost(u_username=username, u_post_content=content, u_privacy= privacy)
+                print "Post published!"
+            else:
+                print "Empty post cannot be published"
+        else:
+            print "invalid data"
+    else:
+        post_form = PostForm()
+
     username = request.GET.get('username',None)
     number =  request.GET.get('number')
 
     post_set= getPostDetails(username,number)
-    context = {'post_set':post_set}
-    return render(request, 'microblog/postlist.html', context)
+    context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form}
+    return render(request, 'microblog/homepage.html', context)
+
 def unfollow(request):
     follower=request.GET.get('follower', None)
 
     following= request.GET.get('following', None)
     unfollowUser(follower,following)
     return HttpResponseRedirect('/microblog/profile/?username='+following)
+
 def follow(request):
     follower=request.GET.get('follower', None)
 
@@ -84,8 +118,9 @@ def follow(request):
 
     return HttpResponseRedirect('/microblog/profile/?username='+following)
 
-
 def getProfile(request):
+    if not isAuthenticated(request):
+        return redirect('index')
     username = request.GET.get('username',None)
     isUsersProfile=False
     if username == request.user.username:
@@ -106,6 +141,8 @@ def getProfile(request):
     return render(request, 'microblog/profile.html',context)
 
 def getSavedPosts(request):
+    if not isAuthenticated(request):
+        return redirect('index')
     username = request.GET.get('username',None)
     number =  request.GET.get('number')
     post_set = getSavedPostsByUser(username,number)

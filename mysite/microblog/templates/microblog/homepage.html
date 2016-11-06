@@ -1,0 +1,61 @@
+{% extends 'microblog/header.html' %}
+{% load staticfiles %}
+<html lang="en">
+
+  <link href="{% static 'microblog/home.css' %}" rel="stylesheet" }
+
+  <body>
+    {% block body %}
+    {{ block.super }}
+
+    <div class="col-lg-6 col-md-8 col-sm-10 col-lg-offset-3 col-md-offset-2 col-sm-offset-1">
+      <div class="panel panel-default">
+
+      <div class = "panel panel-default">
+        <div class="panel-body">
+
+          <form method="POST">
+            {% csrf_token %}
+            <div class = "form-group">
+              {{ post_form.post_content.errors }}
+              {{ post_form.post_content }}
+            </div>
+
+            <div class="form-group">
+              <div class="form-inline">
+                <div class="checkbox">
+                  {{ post_form.public_privacy.errors }}
+                  <label for="{{ post_form.public_privacy.id_for_label }}">  {{ post_form.public_privacy }} Public</label>
+                </div>
+                <button class="btn btn-primary pull-right">Post</button>
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+      <div class = "panel-group">
+        {% if post_set %}
+          {% for post in post_set %}
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h3 class="panel-title">{{ post.creator.profile_name }}</h3>
+              </div>
+              <div class="panel-body">
+                {{ post.post_content }}
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>No posts available to show</p>
+        {% endif %}
+
+
+    </div>
+
+    {% endblock %}
+  </body>
+
+</html>
