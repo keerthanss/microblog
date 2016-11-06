@@ -1,0 +1,33 @@
+{% extends 'microblog/header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+{% block body %}
+{{block.super}}
+
+<form action = "/microblog/editprofile/" method="post">
+  {% csrf_token %}
+  <div class="fieldWrapper">
+    <div class="row">
+
+      <div class="col-sm-2" >
+
+        <label for="{{ form.profile_name.id_for_label }}"> profile name:</label>
+
+
+       </div>
+
+        {{ form.profile_name }}
+        <br><br><br<br>
+    </div>
+    <div class= "row">
+      <br>
+    <div class="col-sm-2" >  <label for="{{form.bio.id_for_label}}">Bio:</label></div>
+    <br>
+      {{ form.bio }}
+
+  </div>
+</div>
+  <input type="submit" value="Submit" />
+</form>
+
+{%endblock%}

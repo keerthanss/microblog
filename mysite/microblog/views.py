@@ -14,6 +14,11 @@ def isAuthenticated(request):
             return True
     return False
 
+from django.http import HttpResponseRedirect
+from .signIn import authenticate, register
+from .logic import *
+from .forms import *
+
 def loginpage(request):
     #check if it is a POST request
     if request.method == 'POST':
@@ -48,6 +53,26 @@ def index(request):
     context = {'post_set': post_set}
     return render(request, 'microblog/index.html', context)
 '''
+def editProfile(request):
+    username = request.GET.get('username',None)
+
+    user_details = getUserDetails(username).first()
+    #return render (request, 'microblog/editprofile.html',context)
+
+    if request.method == 'POST':
+        form=EditProfileForm(request.POST)
+        if form.is_valid():
+            form=form.cleaned_data
+            user_details.profile_name=form['profile_name']
+            user_details.bio=form['bio']
+            user_details.save()
+            return HttpResponseRedirect('/microblog/profile')
+
+    else:
+        form = EditProfileForm(initial={'profile_name': user_details.profile_name ,'bio':user_details.bio})
+
+    return render(request, 'microblog/editprofile.html', {'form': form})
+
 
 def getPosts(request):
     if not isAuthenticated(request):
@@ -73,17 +98,42 @@ def getPosts(request):
 
     username = request.GET.get('username',None)
     number =  request.GET.get('number')
+
     post_set= getPostDetails(username,number)
     context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form}
     return render(request, 'microblog/homepage.html', context)
+
+def unfollow(request):
+    follower=request.GET.get('follower', None)
+
+    following= request.GET.get('following', None)
+    unfollowUser(follower,following)
+    return HttpResponseRedirect('/microblog/profile/?username='+following)
+
+def follow(request):
+    follower=request.GET.get('follower', None)
+
+    following= request.GET.get('following', None)
+    followUser(follower,following)
+
+    return HttpResponseRedirect('/microblog/profile/?username='+following)
 
 def getProfile(request):
     if not isAuthenticated(request):
         return redirect('index')
     username = request.GET.get('username',None)
+    isUsersProfile=False
+    if username == request.user.username:
+        isUsersProfile=True
+    if username ==None:
+        username = request.user.username
+        isUsersProfile=True
+    isFollowing = checkFollowing(request.user.username,username)
     user_details = getUserDetails(username)
     post_set  =getPostDetails(username,None)
     context =   {
+                'isfollowing':isFollowing,
+                'myprofile': isUsersProfile,
                 'title' : 'Profile',
                 'user_details':user_details,
                 'post_set':post_set

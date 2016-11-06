@@ -25,3 +25,7 @@ class PostForm(forms.Form):
                                                     }),
                                     max_length = 256)
     public_privacy = forms.BooleanField(required=False)
+
+class EditProfileForm(forms.Form):
+    profile_name = forms.CharField(label='Profile Name', max_length=100)
+    bio = forms.CharField(widget=forms.Textarea , label='bio')
