@@ -1,4 +1,4 @@
-{% extends 'microblog/header.html' %}
+{% extends 'microblog/postlist.html' %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,26 +44,10 @@
     <div class="col-sm-9">
       <h4><small>RECENT POSTS</small></h4>
       <hr>
-
-
-      {% if post_set %}
-
-          {% for post in post_set %}
-
-               <p style="font-size:20px">{{ post.creator.profile_name   }}<span class="smallerFont"> ({{ post.creator.user_name   }})</span></p>
-
-                <p><span class="glyphicon glyphicon-time"></span> {{post.timestamp}}</p>
-                <br>
-                <p>{{post.post_content}}</p>
-                <hr>
-          {% endfor %}
-      {% else %}
-          <p>No posts are available.</p>
-      {% endif %}
-
-
+      {% block postlist %}
+        {{ block.super }}
+      {% endblock %}
       <hr>
-
     </div>
   </div>
 </div>
