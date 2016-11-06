@@ -18,7 +18,9 @@ apirouter.register(r'api/posts/save',PostSaveViewSet,'saves')# saves the post /p
 
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    #url(r'index', views.index, name='index'),
+    url(r'^$', views.loginpage, name='index'),
+    #url(r'^',include(router.urls)),
     url(r'views/posts/get', views.getPosts,name='postlist'),
     url(r'views/profile/', views.getProfile,name='postlist'),
     url(r'views/saved/', views.getSavedPosts,name='postlist'),
