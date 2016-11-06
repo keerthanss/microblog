@@ -15,3 +15,6 @@ class RegisterForm(forms.Form):
     r_password = forms.CharField( label="Password",
                                 widget = forms.PasswordInput(attrs={'placeholder':'Password', 'required' : True}),
                                     max_length=30)
+
+class PostForm(forms.Form):
+    post_content = forms.CharField(max_length = 256)

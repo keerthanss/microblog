@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'posts/get', views.getPosts,name='postlist'),
     url(r'profile/', views.getProfile,name='profile'),
     url(r'saved/', views.getSavedPosts,name='postlist'),
+    url(r'home/', views.getPosts, name='homepage'),
     #url(r'^',include(viewrouter.urls)),
     url(r'^',include(apirouter.urls)),
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))

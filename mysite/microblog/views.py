@@ -2,10 +2,16 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .Serializers import *
 from rest_framework import viewsets
-from .forms import LogInForm, RegisterForm
+from .forms import *
 from django.http import HttpResponseRedirect
 from .signIn import authenticate, register
 from .logic import *
+
+def isAuthenticated(request):
+    if request.user:
+        if request.user.is_authenticated:
+            return True
+    return False
 
 def loginpage(request):
     #check if it is a POST request
@@ -43,13 +49,17 @@ def index(request):
 '''
 
 def getPosts(request):
+    if not isAuthenticated(request):
+        return redirect('index')
     username = request.GET.get('username',None)
     number =  request.GET.get('number')
     post_set= getPostDetails(username,number)
-    context = {'post_set':post_set}
-    return render(request, 'microblog/postlist.html', context)
+    context = {'title' : 'Home', 'post_set':post_set}
+    return render(request, 'microblog/homepage.html', context)
 
 def getProfile(request):
+    if not isAuthenticated(request):
+        return redirect('index')
     username = request.GET.get('username',None)
     user_details = getUserDetails(username)
     post_set  =getPostDetails(username,None)
@@ -61,6 +71,8 @@ def getProfile(request):
     return render(request, 'microblog/profile.html',context)
 
 def getSavedPosts(request):
+    if not isAuthenticated(request):
+        return redirect('index')
     username = request.GET.get('username',None)
     number =  request.GET.get('number')
     post_set = getSavedPostsByUser(username,number)
