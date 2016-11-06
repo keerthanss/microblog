@@ -15,3 +15,6 @@ class RegisterForm(forms.Form):
     r_password = forms.CharField( label="Password",
                                 widget = forms.PasswordInput(attrs={'placeholder':'Password', 'required' : True}),
                                     max_length=30)
+class EditProfileForm(forms.Form):
+    profile_name = forms.CharField(label='Profile Name', max_length=100)   
+    bio = forms.CharField(widget=forms.Textarea , label='bio')
