@@ -11,6 +11,9 @@ from django.http import HttpResponseRedirect
 from .signIn import authenticate, register, logoutuser
 from .logic import *
 from .forms import *
+from django.contrib import messages
+
+
 
 def isAuthenticated(request):
     if request.user:
@@ -70,9 +73,18 @@ def editProfile(request):
     else:
         form = EditProfileForm(initial={'profile_name': user_details.profile_name ,'bio':user_details.bio})
 
-    return render(request, 'microblog/editprofile.html', {'form': form})
+    return render(request, 'microblog/editprofile.html', {'form': form, 'searchForm':SearchForm()})
 
-
+def searchUser(request):
+    if request.method == 'POST':
+        form=SearchForm(request.POST)
+        if form.is_valid():
+            form=form.cleaned_data
+            user_name=form['searchField']
+            if userNameIsValid(user_name):
+                return HttpResponseRedirect('/microblog/profile/?username='+user_name)
+            messages.add_message(request, messages.INFO, 'User not found')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 def homepage(request):
     if not isAuthenticated(request):
         return redirect('index')
@@ -100,7 +112,7 @@ def homepage(request):
     post_set= getHomePagePosts(username,number)
 
     post_set = addSavedFieldToPostList(post_set,request.user.username)
-    context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form}
+    context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form,'searchForm':searchForm}
     return render(request, 'microblog/homepage.html', context)
 
 def logoutview(request):
@@ -162,9 +174,11 @@ def getProfile(request):
                 'myprofile': isUsersProfile,
                 'title' : 'Profile',
                 'user_details':user_details,
+                'searchForm':SearchForm(),
                 'post_set':post_set
                 }
     return render(request, 'microblog/profile.html',context)
+
 
 def getSavedPosts(request):
     if not isAuthenticated(request):
@@ -172,5 +186,6 @@ def getSavedPosts(request):
     username = request.GET.get('username',None)
     number =  request.GET.get('number')
     post_set = getSavedPostsByUser(username,number)
-    context = {'post_set':post_set}
+    context = {'post_set':post_set,
+                'searchForm':SearchForm()}
     return render(request, 'microblog/postlist.html', context)

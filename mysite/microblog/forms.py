@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import Textarea
-
+from models import User
+from dal import autocomplete
 class LogInForm(forms.Form):
     username = forms.CharField(widget = forms.TextInput(attrs={'placeholder':'Username', 'required' : True}),
                                     max_length=30)
@@ -30,3 +31,7 @@ class PostForm(forms.Form):
 class EditProfileForm(forms.Form):
     profile_name = forms.CharField(label='Profile Name', max_length=100)
     bio = forms.CharField(widget=forms.Textarea , label='bio')
+
+class SearchForm(forms.Form):
+    searchField = forms.CharField(label='search',
+                    widget=forms.TextInput(attrs={'placeholder': 'Search'}))

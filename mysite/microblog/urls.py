@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^$', views.loginpage, name='index'),
     #url(r'^',include(router.urls)),
     url(r'editprofile/', views.editProfile,name='editProfile'),
+    url(r'searchuser/', views.searchUser,name='searchuser'),
     url(r'posts/get', views.homepage,name='postlist'),
     url(r'profile/', views.getProfile,name='profile'),
     url(r'saved/', views.getSavedPosts,name='postlist'),
@@ -34,6 +35,8 @@ urlpatterns = [
     url(r'share/', views.share, name='share'),
     url(r'logout/', views.logoutview, name='logout'),
     url(r'^',include(apirouter.urls)),
+
+
 
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 

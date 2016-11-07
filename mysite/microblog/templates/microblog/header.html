@@ -7,9 +7,12 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
 </head>
 <body>
 {% block body %}
+
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -19,6 +22,15 @@
       <li {%ifequal title "Home"%}class="active"{%endifequal%} ><a href="/microblog/home">Home</a></li>
       <li {%ifequal title "Profile"%}class="active"{%endifequal%}><a href="/microblog/profile">Profile</a></li>
       <li {%ifequal title "Logout"%}class="active"{%endifequal%}><a href="/microblog/logout/">Logout</a></li>
+      <li><form action = "/microblog/searchuser/" method="post">
+          {% csrf_token %}
+          {{ searchForm.searchField }}
+          </li>
+      <li><input type="submit" value="🔍" />
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+      </form>
     </ul>
   </div>
 </nav>
