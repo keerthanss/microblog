@@ -26,6 +26,11 @@
                   <a href="/microblog/share/?username={{request.user.username}}&post={{post.post_id}}">
                     <span class="glyphicon glyphicon-share"></span>
                   </a>
+                {%ifequal request.user.username post.creator.user_name%}
+                <a href="/microblog/delete/?post={{post.post_id}}">
+                  <span class="glyphicon glyphicon-trash"></span>
+                </a>
+                {%endifequal%}
                 </p>
               </div>
 

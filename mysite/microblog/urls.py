@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'save/', views.save,name='save'),
     url(r'share/', views.share, name='share'),
     url(r'logout/', views.logoutview, name='logout'),
+    url(r'delete/', views.deletePost, name='deletePost'),
     url(r'^',include(apirouter.urls)),
 
 

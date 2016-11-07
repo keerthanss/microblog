@@ -4,6 +4,9 @@ from .Serializers import *
 from .models import User, Post, Follows, Saves, Shares
 from rest_framework import viewsets
 
+#def saveProfilePic(username, picture):
+
+
 def getPostsForProfilePage(username, number, isMyProfile):
     def getSelfProfile():
         posts = getPostDetails(username, number)
@@ -35,6 +38,8 @@ def getPostsForProfilePage(username, number, isMyProfile):
         return getSelfProfile()
     else:
         return getOtherProfile()
+
+
 
 def getSharedPostsByUser(username, number):
     if username is None:
@@ -98,7 +103,12 @@ def unsavePost(user,post):
     if postsSaved:
         postsSaved.delete()
     return True
+def deletePostLogic(postid,username):
 
+    post = Post.objects.get(post_id = postid)
+    if(post):
+        if post.creator.user_name == username:
+            post.delete()
 def getHomePagePosts(username,number):
     users_following = Follows.objects.values_list('following').filter(follower=username)
     queryset = Post.objects.all().order_by('-timestamp').filter(creator__in= set(users_following))

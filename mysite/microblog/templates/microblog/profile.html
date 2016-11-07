@@ -1,5 +1,6 @@
 {% extends 'microblog/postlist.html' %}
 {% load staticfiles %}
+{% load static %}
 
 {% block head %}
   <link rel="stylesheet" href="{% static 'microblog/profile.css'%}">
@@ -13,6 +14,7 @@
     <div class="col-sm-3 sidenav">
       {%if user_details %}
         {% for user in user_details %}
+          <img src="{{ MEDIA_URL}}"></img>
           <h4>{{user.profile_name}}</h4>
           <h5>({{user.user_name}})</h5>
           <br>
