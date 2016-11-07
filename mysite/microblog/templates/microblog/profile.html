@@ -15,7 +15,11 @@
     <div class="col-sm-3 sidenav " >
       {%if user_details %}
         {% for user in user_details %}
-          <img src="{{ MEDIA_URL}}"></img>
+          {%if user.profile_pic%}
+            <img src="{{ user.profile_pic.url}}" width="120px" height="120px"></img>
+          {%else%}
+            <img src="https://www.fanspole.com/assets/default_user-c283cfbc3d432e22b1d2f1eef515d0b9.png" width="120px" height="120px"></img>
+          {%endif%}
           <h4>{{user.profile_name}}</h4>
           <h5>({{user.user_name}})</h5>
           <br>
