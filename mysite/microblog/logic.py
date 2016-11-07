@@ -49,7 +49,13 @@ def unsavePost(user,post):
             postsSaved.delete()
         return True
 
-
+def getHomePagePosts(username,number):
+    users_following = Follows.objects.values_list('following').filter(follower=username)
+    queryset = Post.objects.all().order_by('-timestamp').filter(creator__in= set(users_following))
+    if number is not None:
+        queryset = queryset[:number]
+    queryset=queryset.filter(privacy=Post.PUBLIC)
+    return queryset
 def getSavedPostsByUser(username,number):
     if username is None:
         return None

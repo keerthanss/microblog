@@ -10,7 +10,7 @@ apirouter = routers.DefaultRouter()
 apirouter.register(r'api/users/get',apis.UserGetViewSet,'user') #of the form /users/get/?username=USERNAME
 apirouter.register(r'api/users/insert',UserInsertViewSet,'user')
 apirouter.register(r'api/posts/get',PostGetViewSet,'post')#of the form /posts/get/?username=USERNAME&number=NUMBER
-apirouter.register(r'api/home',HomepageViewSet,'post') #home page /home/?username=USERNAME&number=NUMBER
+apirouter.register(r'api/homepage',HomepageViewSet,'post') #home page /home/?username=USERNAME&number=NUMBER
 apirouter.register(r'api/saved',GetSavedPostViewSet,'saves') #home page /saved/?username=USERNAME&number=NUMBER
 apirouter.register (r'api/follow',FollowsViewSet,'follow-user') #/follow/?follower=FOLLOWER&following=FOLLOWING
 apirouter.register(r'api/posts/save',PostSaveViewSet,'saves')# saves the post /posts/save/?username=USERNAME&postid=POSTID

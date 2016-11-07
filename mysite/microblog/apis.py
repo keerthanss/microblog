@@ -81,7 +81,7 @@ class PostSaveViewSet(viewsets.ModelViewSet):
 
         queryset = Saves.objects.all().order_by('-timestamp')[:1]
         return queryset
-        
+
 class HomepageViewSet(viewsets.ModelViewSet):
     serializer_class  =PostSerializer
     def get_queryset(self):

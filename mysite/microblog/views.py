@@ -95,10 +95,10 @@ def homepage(request):
     else:
         post_form = PostForm()
 
-    username = request.GET.get('username',None)
+    username = request.user.username
     number =  request.GET.get('number')
+    post_set= getHomePagePosts(username,number)
 
-    post_set= getPostDetails(username,number)
     post_set = addSavedFieldToPostList(post_set,request.user.username)
     context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form}
     return render(request, 'microblog/homepage.html', context)
