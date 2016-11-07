@@ -30,3 +30,8 @@ class PostForm(forms.Form):
 class EditProfileForm(forms.Form):
     profile_name = forms.CharField(label='Profile Name', max_length=100)
     bio = forms.CharField(widget=forms.Textarea , label='bio')
+    profile_pic = forms.ImageField(label="Select an image", required=False)
+    #profile_pic = forms
+class SearchForm(forms.Form):
+    searchField = forms.CharField(label='search',
+                    widget=forms.TextInput(attrs={'placeholder': 'Search'}))

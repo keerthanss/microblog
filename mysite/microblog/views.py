@@ -11,6 +11,9 @@ from django.http import HttpResponseRedirect
 from .signIn import authenticate, register, logoutuser
 from .logic import *
 from .forms import *
+from django.contrib import messages
+
+
 
 def isAuthenticated(request):
     if request.user:
@@ -30,13 +33,13 @@ def loginpage(request):
             print login_form.cleaned_data
             #TODO: change redirect url
             #return HttpResponseRedirect('profile')
-            return redirect('profile')
+            return redirect('homepage')
         elif register_form.is_valid():
             data = register_form.cleaned_data
             register(data['r_email'], data['r_username'], data['r_password'])
             print register_form.cleaned_data
             #TODO: change redirect url
-            return HttpResponseRedirect('/registered')
+            return redirect('index')
         else: #none of the forms have valid data
             print "invalid form"
     #work with the GET request
@@ -53,14 +56,20 @@ def index(request):
     return render(request, 'microblog/index.html', context)
 '''
 def editProfile(request):
-    username = request.GET.get('username',None)
+    username = request.user.username
 
     user_details = getUserDetails(username).first()
     #return render (request, 'microblog/editprofile.html',context)
 
     if request.method == 'POST':
-        form=EditProfileForm(request.POST)
+        print "Received post method"
+        form=EditProfileForm(request.POST, request.FILES)
+        print form
         if form.is_valid():
+            print "Form is valid"
+            if request.FILES['profile_pic']:
+                user_details.profile_pic=request.FILES['profile_pic']
+            #saveProfilePic(request.user.username, request.FILES['profile_pic'])
             form=form.cleaned_data
             user_details.profile_name=form['profile_name']
             user_details.bio=form['bio']
@@ -70,9 +79,18 @@ def editProfile(request):
     else:
         form = EditProfileForm(initial={'profile_name': user_details.profile_name ,'bio':user_details.bio})
 
-    return render(request, 'microblog/editprofile.html', {'form': form})
+    return render(request, 'microblog/editprofile.html', {'form': form, 'searchForm':SearchForm()})
 
-
+def searchUser(request):
+    if request.method == 'POST':
+        form=SearchForm(request.POST)
+        if form.is_valid():
+            form=form.cleaned_data
+            user_name=form['searchField']
+            if userNameIsValid(user_name):
+                return HttpResponseRedirect('/microblog/profile/?username='+user_name)
+            messages.add_message(request, messages.INFO, 'User not found')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 def homepage(request):
     if not isAuthenticated(request):
         return redirect('index')
@@ -100,7 +118,7 @@ def homepage(request):
     post_set= getHomePagePosts(username,number)
 
     post_set = addSavedFieldToPostList(post_set,request.user.username)
-    context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form}
+    context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form,'searchForm':SearchForm(),}
     return render(request, 'microblog/homepage.html', context)
 
 def logoutview(request):
@@ -114,6 +132,11 @@ def unfollow(request):
     unfollowUser(follower,following)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+def deletePost(request):
+    username = request.user.username
+    postid= request.GET.get('post',None)
+    deletePostLogic(postid,username)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 def follow(request):
     follower=request.GET.get('follower', None)
 
@@ -153,24 +176,52 @@ def getProfile(request):
         isUsersProfile=True
     isFollowing = checkFollowing(request.user.username,username)
     user_details = getUserDetails(username)
-    post_set  =getPostDetails(username,None)
-    post_set = addSavedFieldToPostList(post_set,request.user.username)
-
+    #post_set  =getPostDetails(username,None)
+    #post_set = addSavedFieldToPostList(post_set,request.user.username)
+    post_set = getPostsForProfilePage(username,None, isUsersProfile)
 
     context =   {
                 'isfollowing':isFollowing,
                 'myprofile': isUsersProfile,
                 'title' : 'Profile',
+                'profiletab':'all',
                 'user_details':user_details,
+                'searchForm':SearchForm(),
                 'post_set':post_set
                 }
     return render(request, 'microblog/profile.html',context)
 
-def getSavedPosts(request):
+def profilePageSavedPosts(request):
     if not isAuthenticated(request):
         return redirect('index')
-    username = request.GET.get('username',None)
+    username = request.user.username
+    user_details = getUserDetails(username)
     number =  request.GET.get('number')
     post_set = getSavedPostsByUser(username,number)
-    context = {'post_set':post_set}
-    return render(request, 'microblog/postlist.html', context)
+    for post in post_set:
+        post.saved=True
+    context = {
+                'myprofile':True,
+                'title':'Profile',
+                'user_details':user_details,
+                'profiletab':'saved',
+                'post_set':post_set,
+                'searchForm' : SearchForm()
+                }
+    return render(request, 'microblog/profile.html', context)
+
+def profilePageSharedPosts(request):
+    if not isAuthenticated(request):
+        return redirect('index')
+    username = request.user.username
+    user_details = getUserDetails(username)
+    number =  request.GET.get('number')
+    post_set = getSharedPostsByUser(username,number)
+    context = {
+                'myprofile':True,
+                'title':'Profile',
+                'user_details':user_details,
+                'profiletab':'shared',
+                'post_set':post_set
+                }
+    return render(request, 'microblog/profile.html', context)

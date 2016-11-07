@@ -1,25 +1,50 @@
+{% load staticfiles %}
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <title>Rypple - {{title}}</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'microblog/header.css' %}"></link>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  {% block head %}
+  {% endblock %}
 </head>
-<body>
+<body background="{% static 'microblog/images/waves.jpg'%}">
 {% block body %}
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default" style="background:#162635;">
   <div class="container-fluid">
     <div class="navbar-header">
-    </div>
+
     <a class="navbar-brand" href="#">Rypple</a>
+    </div>
     <ul class="nav navbar-nav">
       <li {%ifequal title "Home"%}class="active"{%endifequal%} ><a href="/microblog/home">Home</a></li>
       <li {%ifequal title "Profile"%}class="active"{%endifequal%}><a href="/microblog/profile">Profile</a></li>
       <li {%ifequal title "Logout"%}class="active"{%endifequal%}><a href="/microblog/logout/">Logout</a></li>
+      <!--<li><form action = "/microblog/searchuser/" method="post">
+          {% csrf_token %}
+          {{ searchForm.searchField }}
+          </li>
+      <li><input type="submit" value="🔍" />
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+      </form>-->
     </ul>
+    <form class="navbar-form pull-right" action = "/microblog/searchuser/" method="post">
+        {% csrf_token %}
+        {{ searchForm.searchField }}
+        <input type="submit" value="🔍" />
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+    </form>
   </div>
 </nav>
 

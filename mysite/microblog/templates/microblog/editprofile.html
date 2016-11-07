@@ -1,33 +1,42 @@
 {% extends 'microblog/header.html' %}
-<!DOCTYPE html>
-<html lang="en">
+{% load staticfiles %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'microblog/profile.css' %}"></link>
+  <link rel="stylesheet" href="{% static 'microblog/home.css' %}"
+{% endblock %}
+
 {% block body %}
 {{block.super}}
 
-<form action = "/microblog/editprofile/" method="post">
+<div class = "container-fluid"><div class="contain-list">
+<form enctype="multipart/form-data"  method="post">
   {% csrf_token %}
   <div class="fieldWrapper">
-    <div class="row">
-
+    <div class="form-group form-inline">
       <div class="col-sm-2" >
-
-        <label for="{{ form.profile_name.id_for_label }}"> profile name:</label>
-
-
+        <label for="{{ form.profile_name.id_for_label }}"> Profile Name:</label>
        </div>
-
         {{ form.profile_name }}
-        <br><br><br<br>
+        <br><br>
     </div>
-    <div class= "row">
-      <br>
-    <div class="col-sm-2" >  <label for="{{form.bio.id_for_label}}">Bio:</label></div>
-    <br>
+    <div class= "form-group form-inline">
+      <div class="col-sm-2" >
+        <label for="{{form.bio.id_for_label}}">Bio:</label>
+      </div>
       {{ form.bio }}
+    </div>
 
+    <div class = "form-group form-inline">
+      <div class="col-sm-2">
+        <label for="{{form.profile_pic.id_for_label}}">Profile Pic:</label>
+      </div>
+      {{ form.profile_pic }}
+    </div>
   </div>
-</div>
-  <input type="submit" value="Submit" />
+  <div class="form-group">
+    <input type="submit" class="btn sidenavbutton buttontext" value="Submit" />
+  </div>
 </form>
-
+</div></div>
 {%endblock%}

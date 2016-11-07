@@ -1,37 +1,57 @@
 {% extends 'microblog/postlist.html' %}
-<!DOCTYPE html>
-<html lang="en">
+{% load staticfiles %}
+{% load static %}
 
-  {% block body %}
-  {{block.super}}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'microblog/profile.css'%}">
+  <link rel="stylesheet" href="{% static 'microblog/home.css'%}">
+{% endblock %}
+
+{% block body %}
+{{block.super}}
+
 <div class="container-fluid">
   <div class="row content">
-    <div class="col-sm-3 sidenav">
+    <div class="col-sm-3 sidenav " >
       {%if user_details %}
         {% for user in user_details %}
+          {%if user.profile_pic%}
+            <img src="{{ user.profile_pic.url}}" width="120px" height="120px"></img>
+          {%else%}
+            <img src="https://www.fanspole.com/assets/default_user-c283cfbc3d432e22b1d2f1eef515d0b9.png" width="120px" height="120px"></img>
+          {%endif%}
           <h4>{{user.profile_name}}</h4>
           <h5>({{user.user_name}})</h5>
+          <br>
           <h5>About Me:</h5>
           <p>{{user.bio}}</p>
+          <hr>
         {% endfor%}
       {%else%}
         <p> no username given</p>
       {%endif%}
       <p>
-        {%if myprofile   %}
-        <a href="/microblog/editprofile/" class="btn btn-info btn-lg">
+        {%if myprofile %}
+        <p>Posts:</p>
+        <ul class="nav nav-pills nav-stacked">
+          <li class="{%ifequal profiletab 'all'%}active{% endifequal %}"><a href="/microblog/profile">All</a></li>
+          <li class="{%ifequal profiletab 'shared'%}active{% endifequal %}"><a href="/microblog/profile/shared">Shared</a></li>
+          <li class="{%ifequal profiletab 'saved'%}active{% endifequal %}"><a href="/microblog/profile/saved">Saved</a></li>
+        </ul>
+        <br>
+        <a href="/microblog/editprofile/" class="btn sidenavbutton btn-lg buttontext">
           <span class="glyphicon glyphicon-edit"></span> Edit
         </a>
         {%else%}
           {%if isfollowing%}
             {% for user in user_details %}
-            <a href="/microblog/unfollow/?follower={{request.user.username}}&following={{user.user_name}}" class="btn btn-info btn-lg">
+            <a href="/microblog/unfollow/?follower={{request.user.username}}&following={{user.user_name}}" class="btn btn-lg sidenavbutton buttontext">
             {%endfor%}
               <span class="glyphicon glyphicon-ok"></span> Following
             </a>
           {%else%}
           {% for user in user_details %}
-            <a href="/microblog/follow/?follower={{request.user.username}}&following={{user.user_name}}" class="btn btn-info btn-lg">
+            <a href="/microblog/follow/?follower={{request.user.username}}&following={{user.user_name}}" class="btn btn-lg  sidenavbutton buttontext">
           {%endfor%}
             <span class="glyphicon glyphicon-bookmark"></span> Follow
           </a>
@@ -44,10 +64,12 @@
     <div class="col-sm-9">
       <h4><small>RECENT POSTS</small></h4>
       <hr>
+      <div class="contain-list">
       {% block postlist %}
         {{ block.super }}
       {% endblock %}
-      <hr>
+    </div>
+
     </div>
   </div>
 </div>

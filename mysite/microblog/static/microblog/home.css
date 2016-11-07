@@ -19,13 +19,30 @@
   bottom:0;
 }*/
 
-html, body, .container-table {
+ /*body, .container-table {
     height: 100%;
 }
+html {
+  background: url(http://www.planwallpaper.com/static/images/wallpapers-hd-8000-8331-hd-wallpapers.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}*/
 .container-table {
     display: table;
 }
 .vertical-center-row {
     display: table-cell;
     vertical-align: middle;
+}
+
+.contain-list {
+  border-radius: 10px;
+  overflow-y: auto;
+   height:80vh;
+  background-blend-mode: soft-light;
+  padding: 10px;
+  background-color: #dbe6f0;
+  opacity: 0.87;
 }
