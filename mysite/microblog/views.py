@@ -126,8 +126,7 @@ def logoutview(request):
     return redirect('index')
 
 def unfollow(request):
-    follower=request.GET.get('follower', None)
-
+    follower=request.user.username
     following= request.GET.get('following', None)
     unfollowUser(follower,following)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
@@ -138,28 +137,27 @@ def deletePost(request):
     deletePostLogic(postid,username)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 def follow(request):
-    follower=request.GET.get('follower', None)
-
+    follower=request.user.username
     following= request.GET.get('following', None)
     followUser(follower,following)
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 def save(request):
 
-    user = request.GET.get('username',None)
+    user = request.user.username
     post = request.GET.get('post',None)
     savePost(user,post)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def unsave(request):
-    user = request.GET.get('username',None)
+    user = request.user.username
     post = request.GET.get('post',None)
 
     unsavePost(user,post)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def share(request):
-    user = request.GET.get('username', None)
+    user = request.user.username
     post = request.GET.get('post', None)
     sharePost(user, post)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
