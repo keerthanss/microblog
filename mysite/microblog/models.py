@@ -14,7 +14,7 @@ class User(models.Model):
         max_length = 30,
         primary_key = True)
     userid = models.OneToOneField(auth_user, default=-1)
-    profile_pic = models.CharField(max_length = 50)
+    profile_pic = models.ImageField(upload_to = 'ProfilePictures/')
     bio = models.CharField(max_length = 300)
 
 

@@ -62,8 +62,14 @@ def editProfile(request):
     #return render (request, 'microblog/editprofile.html',context)
 
     if request.method == 'POST':
-        form=EditProfileForm(request.POST)
+        print "Received post method"
+        form=EditProfileForm(request.POST, request.FILES)
+        print form
         if form.is_valid():
+            print "Form is valid"
+            if request.FILES['profile_pic']:
+                user_details.profile_pic=request.FILES['profile_pic']
+            #saveProfilePic(request.user.username, request.FILES['profile_pic'])
             form=form.cleaned_data
             user_details.profile_name=form['profile_name']
             user_details.bio=form['bio']
@@ -126,6 +132,11 @@ def unfollow(request):
     unfollowUser(follower,following)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+def deletePost(request):
+    username = request.user.username
+    postid= request.GET.get('post',None)
+    deletePostLogic(postid,username)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 def follow(request):
     follower=request.GET.get('follower', None)
 
