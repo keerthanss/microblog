@@ -36,3 +36,13 @@ html {
     display: table-cell;
     vertical-align: middle;
 }
+
+.contain-list {
+  border-radius: 10px;
+  overflow-y: auto;
+   height:500px;
+  background-blend-mode: soft-light;
+  padding: 10px;
+  background-color: #dbe6f0;
+  opacity: 0.87;
+}

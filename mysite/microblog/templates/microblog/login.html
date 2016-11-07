@@ -33,13 +33,35 @@
       <h4>One stop for all the news. Sign up to get started.</h4>
       <form class="register-form" method="post">
         {% csrf_token %}
-        {{ register_form }}
+        <div class="form-group">
+          {{ register_form.r_email.errors }}
+          {{ register_form.r_email }}
+        </div>
+
+        <div class="form-group">
+          {{ register_form.r_username.errors }}
+          {{ register_form.r_username }}
+        </div>
+
+        <div class="form-group">
+          {{ register_form.r_password.errors }}
+          {{ register_form.r_password }}
+        </div>
+
         <button>create</button>
         <p class="message">Already registered? <a href="#">Sign In</a></p>
       </form>
       <form class="login-form" method="post">
         {% csrf_token %}
-        {{ login_form }}
+        <div class="form-group">
+          {{ login_form.username.errors }}
+          {{ login_form.username }}
+        </div>
+
+        <div class="form-group">
+          {{ login_form.password.errors }}
+          {{ login_form.password }}
+        </div>
         <button>login</button>
         <p class="message">Not registered? <a href="#">Create an account</a></p>
       </form>
