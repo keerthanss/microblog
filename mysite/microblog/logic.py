@@ -122,6 +122,11 @@ def getSavedPostsByUser(username,number):
     if number is not None:
         queryset = queryset[:number]
     return queryset
+def userNameIsValid(username):
+    user = User.objects.all().filter(user_name = username)
+    if user :
+        return True
+    return False
 
 def publishPost(u_username, u_post_content, u_privacy=Post.PUBLIC):
     author = getUserDetails(u_username).first()

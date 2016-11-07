@@ -11,6 +11,9 @@ from django.http import HttpResponseRedirect
 from .signIn import authenticate, register, logoutuser
 from .logic import *
 from .forms import *
+from django.contrib import messages
+
+
 
 def isAuthenticated(request):
     if request.user:
@@ -30,7 +33,7 @@ def loginpage(request):
             print login_form.cleaned_data
             #TODO: change redirect url
             #return HttpResponseRedirect('profile')
-            return redirect('profile')
+            return redirect('homepage')
         elif register_form.is_valid():
             data = register_form.cleaned_data
             register(data['r_email'], data['r_username'], data['r_password'])
@@ -70,9 +73,18 @@ def editProfile(request):
     else:
         form = EditProfileForm(initial={'profile_name': user_details.profile_name ,'bio':user_details.bio})
 
-    return render(request, 'microblog/editprofile.html', {'form': form})
+    return render(request, 'microblog/editprofile.html', {'form': form, 'searchForm':SearchForm()})
 
-
+def searchUser(request):
+    if request.method == 'POST':
+        form=SearchForm(request.POST)
+        if form.is_valid():
+            form=form.cleaned_data
+            user_name=form['searchField']
+            if userNameIsValid(user_name):
+                return HttpResponseRedirect('/microblog/profile/?username='+user_name)
+            messages.add_message(request, messages.INFO, 'User not found')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 def homepage(request):
     if not isAuthenticated(request):
         return redirect('index')
@@ -100,7 +112,7 @@ def homepage(request):
     post_set= getHomePagePosts(username,number)
 
     post_set = addSavedFieldToPostList(post_set,request.user.username)
-    context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form}
+    context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form,'searchForm':SearchForm(),}
     return render(request, 'microblog/homepage.html', context)
 
 def logoutview(request):
@@ -163,6 +175,7 @@ def getProfile(request):
                 'title' : 'Profile',
                 'profiletab':'all',
                 'user_details':user_details,
+                'searchForm':SearchForm(),
                 'post_set':post_set
                 }
     return render(request, 'microblog/profile.html',context)
@@ -181,7 +194,8 @@ def profilePageSavedPosts(request):
                 'title':'Profile',
                 'user_details':user_details,
                 'profiletab':'saved',
-                'post_set':post_set
+                'post_set':post_set,
+                'searchForm' : SearchForm()
                 }
     return render(request, 'microblog/profile.html', context)
 
