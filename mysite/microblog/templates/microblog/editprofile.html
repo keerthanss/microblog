@@ -1,7 +1,15 @@
 {% extends 'microblog/header.html' %}
+{% load staticfiles %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'microblog/profile.css' %}"></link>
+  <link rel="stylesheet" href="{% static 'microblog/home.css' %}"
+{% endblock %}
+
 {% block body %}
 {{block.super}}
 
+<div class = "container-fluid"><div class="contain-list">
 <form enctype="multipart/form-data"  method="post">
   {% csrf_token %}
   <div class="fieldWrapper">
@@ -26,9 +34,9 @@
       {{ form.profile_pic }}
     </div>
   </div>
-  <div class="form-group col-sm-offset-1">
-    <input type="submit" class="btn" value="Submit" />
+  <div class="form-group">
+    <input type="submit" class="btn sidenavbutton buttontext" value="Submit" />
   </div>
 </form>
-
+</div></div>
 {%endblock%}
