@@ -116,9 +116,9 @@ def getSavedPostsByUser(username,number):
         l.insert(0,p.post_id)
     queryset = Post.objects.all().order_by('-timestamp').filter(post_id__in= set(l))
     for post in queryset:
-        for share in postsShared:
-            if share.post_id == post.post_id:
-                post.timestamp = share.timestamp
+        for save in postsSaved:
+            if save.post_id == post.post_id:
+                post.timestamp = save.timestamp
     if number is not None:
         queryset = queryset[:number]
     return queryset

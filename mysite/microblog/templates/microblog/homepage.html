@@ -1,12 +1,18 @@
 {% extends 'microblog/postlist.html' %}
 {% load staticfiles %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'microblog/home.css' %}"></link>
+{% endblock %}
+
 {% block body %}
 {{ block.super }}
 <div class="col-lg-6 col-md-8 col-sm-10 col-lg-offset-3 col-md-offset-2 col-sm-offset-1">
-  <div class="panel panel-default">
+  <div class="contain-list">
+  <div class="panel panel-default" style="background-color: #edf2f7;">
 
-  <div class = "panel panel-default">
-    <div class="panel-body">
+  <div class = "panel panel-default" >
+    <div class="panel-body" style="background-color: #edf2f7;">
 
       <form method="POST">
         {% csrf_token %}
@@ -26,7 +32,7 @@
         </div>
 
       </form>
-
+    </div>
     </div>
   </div>
 

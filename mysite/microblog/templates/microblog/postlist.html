@@ -1,42 +1,40 @@
 {% extends 'microblog/header.html' %}
+{% load staticfiles %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'microblog/panel-head.css' %}"></link>
+{% endblock %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <body>
+{% block postlist %}
+  <div class = "panel-group">
+    {% if post_set %}
+      {% for post in post_set %}
+        <div class="panel" >
+          <div class="panel-heading" style="background-color: #162635;">
 
-    {% block postlist %}
-      <div class = "panel-group">
-        {% if post_set %}
-          {% for post in post_set %}
-            <div class="panel panel-info">
-              <div class="panel-heading">
-                  <h3 class = "panel-title"> <a href="/microblog/profile/?username={{post.creator.user_name}}">{{ post.creator.profile_name }}</a> </h3>
-              </div>
-              <div class="panel-body">
-                {{ post.post_content }}
-                <p class = "text-muted text-right small"><span class="glyphicon glyphicon-time"></span> {{post.timestamp}}</p>
-                <p class = "text-muted text-right small">
-                {%if post.saved %}
-                    <a href="/microblog/unsave/?username={{request.user.username}}&post={{post.post_id}}">
-                    <span class="glyphicon glyphicon-floppy-saved"></span></a>
-                {%else%}
-                  <a href="/microblog/save/?username={{request.user.username}}&post={{post.post_id}}">
-                    <span class="glyphicon glyphicon-floppy-disk"></span></a>
-                {%endif%}
-                  <a href="/microblog/share/?username={{request.user.username}}&post={{post.post_id}}">
-                    <span class="glyphicon glyphicon-share"></span>
-                  </a>
-                </p>
-              </div>
+              <h3 class = "panel-title" style="color: #dbe6f0;"> <a href="/microblog/profile/?username={{post.creator.user_name}}" >{{ post.creator.profile_name }}</a> </h3>
+          </div>
+          <div class="panel-body">
+            {{ post.post_content }}
+            <p class = "text-muted text-right small"><span class="glyphicon glyphicon-time"></span> {{post.timestamp}}</p>
+            <p class = "text-muted text-right small">
+            {%if post.saved %}
+                <a href="/microblog/unsave/?username={{request.user.username}}&post={{post.post_id}}">
+                <span class="glyphicon glyphicon-floppy-saved"></span></a>
+            {%else%}
+              <a href="/microblog/save/?username={{request.user.username}}&post={{post.post_id}}">
+                <span class="glyphicon glyphicon-floppy-disk"></span></a>
+            {%endif%}
+              <a href="/microblog/share/?username={{request.user.username}}&post={{post.post_id}}">
+                <span class="glyphicon glyphicon-share"></span>
+              </a>
+            </p>
+          </div>
 
-            </div>
-            <br>
-          {% endfor %}
-        {% else %}
-          <p>No posts available to show</p>
-        {% endif %}
-      </div>
-    {% endblock %}
-
-  </body>
-</html>
+        </div>
+        <br>
+      {% endfor %}
+    {% else %}
+      <p>No posts available to show</p>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -1,4 +1,40 @@
 .sidenav {
-  background-color: #f1f1f1;
+
+  background-color: #dbe6f0;
+  opacity: 0.90;
   height: 100%;
+}
+.sidenavbutton{
+  background-color: #162635;
+  opacity: 1.0
+}
+.buttontext{
+  color: #dbe6f0;
+
+}
+.buttontext:hover{
+  color: #dbe6f0;
+
+}
+.nav-pills > li {
+  float: left;
+}
+.nav-pills > li > a {
+  border-radius: 4px;
+}
+.nav-pills > li + li {
+  margin-left: 2px;
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+  color: #dbe6f0;
+  background-color: #162635;
+}
+.nav-stacked > li {
+  float: none;
+}
+.nav-stacked > li + li {
+  margin-top: 2px;
+  margin-left: 0;
 }

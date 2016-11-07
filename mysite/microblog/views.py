@@ -39,7 +39,7 @@ def loginpage(request):
             register(data['r_email'], data['r_username'], data['r_password'])
             print register_form.cleaned_data
             #TODO: change redirect url
-            return HttpResponseRedirect('/registered')
+            return redirect('index')
         else: #none of the forms have valid data
             print "invalid form"
     #work with the GET request
