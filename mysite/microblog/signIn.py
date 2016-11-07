@@ -2,7 +2,7 @@ from django.contrib.auth.models import User as auth_user
 from django.contrib.auth import authenticate as authenticateUser
 from django.contrib.auth import login as logInUser
 from django.contrib.auth import logout
-from .models import User
+from .models import User, Follows
 
 def authenticate(request, u_username, u_password):
     user = authenticateUser(username=u_username, password=u_password)
@@ -18,6 +18,8 @@ def register(u_email, u_username, u_password):
     newuser_infoentry = User(user_name = newuser.username, userid_id = newuser.id)
     newuser.save()
     newuser_infoentry.save()
+    follow_self = Follows(follower=newuser_infoentry, following=newuser_infoentry)
+    follow_self.save()
     print "New user created!"
 
 def logoutuser(request):
