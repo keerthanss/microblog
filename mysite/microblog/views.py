@@ -53,7 +53,7 @@ def index(request):
     return render(request, 'microblog/index.html', context)
 '''
 def editProfile(request):
-    username = request.GET.get('username',None)
+    username = request.user.username
 
     user_details = getUserDetails(username).first()
     #return render (request, 'microblog/editprofile.html',context)
@@ -153,24 +153,50 @@ def getProfile(request):
         isUsersProfile=True
     isFollowing = checkFollowing(request.user.username,username)
     user_details = getUserDetails(username)
-    post_set  =getPostDetails(username,None)
-    post_set = addSavedFieldToPostList(post_set,request.user.username)
-
+    #post_set  =getPostDetails(username,None)
+    #post_set = addSavedFieldToPostList(post_set,request.user.username)
+    post_set = getPostsForProfilePage(username,None, isUsersProfile)
 
     context =   {
                 'isfollowing':isFollowing,
                 'myprofile': isUsersProfile,
                 'title' : 'Profile',
+                'profiletab':'all',
                 'user_details':user_details,
                 'post_set':post_set
                 }
     return render(request, 'microblog/profile.html',context)
 
-def getSavedPosts(request):
+def profilePageSavedPosts(request):
     if not isAuthenticated(request):
         return redirect('index')
-    username = request.GET.get('username',None)
+    username = request.user.username
+    user_details = getUserDetails(username)
     number =  request.GET.get('number')
     post_set = getSavedPostsByUser(username,number)
-    context = {'post_set':post_set}
-    return render(request, 'microblog/postlist.html', context)
+    for post in post_set:
+        post.saved=True
+    context = {
+                'myprofile':True,
+                'title':'Profile',
+                'user_details':user_details,
+                'profiletab':'saved',
+                'post_set':post_set
+                }
+    return render(request, 'microblog/profile.html', context)
+
+def profilePageSharedPosts(request):
+    if not isAuthenticated(request):
+        return redirect('index')
+    username = request.user.username
+    user_details = getUserDetails(username)
+    number =  request.GET.get('number')
+    post_set = getSharedPostsByUser(username,number)
+    context = {
+                'myprofile':True,
+                'title':'Profile',
+                'user_details':user_details,
+                'profiletab':'shared',
+                'post_set':post_set
+                }
+    return render(request, 'microblog/profile.html', context)

@@ -1,46 +1,36 @@
-
 {% extends 'microblog/postlist.html' %}
 {% load staticfiles %}
-<html lang="en">
-<head>
-  <link href="{% static 'microblog/home.css' %}" rel="stylesheet" }
-</head>
+{% block body %}
+{{ block.super }}
+<div class="col-lg-6 col-md-8 col-sm-10 col-lg-offset-3 col-md-offset-2 col-sm-offset-1">
+  <div class="panel panel-default">
 
-<body>
-    {% block body %}
-    {{ block.super }}
-    <div class="col-lg-6 col-md-8 col-sm-10 col-lg-offset-3 col-md-offset-2 col-sm-offset-1">
-      <div class="panel panel-default">
+  <div class = "panel panel-default">
+    <div class="panel-body">
 
-      <div class = "panel panel-default">
-        <div class="panel-body">
-
-          <form method="POST">
-            {% csrf_token %}
-            <div class = "form-group">
-              {{ post_form.post_content.errors }}
-              {{ post_form.post_content }}
-            </div>
-
-            <div class="form-group">
-              <div class="form-inline">
-                <div class="checkbox">
-                  {{ post_form.public_privacy.errors }}
-                  <label for="{{ post_form.public_privacy.id_for_label }}">  {{ post_form.public_privacy }} Public</label>
-                </div>
-                <button class="btn btn-primary pull-right">Post</button>
-              </div>
-            </div>
-
-          </form>
-
+      <form method="POST">
+        {% csrf_token %}
+        <div class = "form-group">
+          {{ post_form.post_content.errors }}
+          {{ post_form.post_content }}
         </div>
-      </div>
 
-      {% block postlist %}
-        {{ block.super }}
-      {% endblock %}
-    {% endblock %}
-  </body>
+        <div class="form-group">
+          <div class="form-inline">
+            <div class="checkbox">
+              {{ post_form.public_privacy.errors }}
+              <label for="{{ post_form.public_privacy.id_for_label }}">  {{ post_form.public_privacy }} Public</label>
+            </div>
+            <button class="btn btn-primary pull-right">Post</button>
+          </div>
+        </div>
 
-</html>
+      </form>
+
+    </div>
+  </div>
+
+  {% block postlist %}
+    {{ block.super }}
+  {% endblock %}
+{% endblock %}

@@ -1,9 +1,13 @@
 {% extends 'microblog/postlist.html' %}
-<!DOCTYPE html>
-<html lang="en">
+{% load staticfiles %}
 
-  {% block body %}
-  {{block.super}}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'microblog/profile.css'%}">
+{% endblock %}
+
+{% block body %}
+{{block.super}}
+
 <div class="container-fluid">
   <div class="row content">
     <div class="col-sm-3 sidenav">
@@ -11,14 +15,22 @@
         {% for user in user_details %}
           <h4>{{user.profile_name}}</h4>
           <h5>({{user.user_name}})</h5>
+          <br>
           <h5>About Me:</h5>
           <p>{{user.bio}}</p>
+          <hr>
         {% endfor%}
       {%else%}
         <p> no username given</p>
       {%endif%}
       <p>
-        {%if myprofile   %}
+        {%if myprofile %}
+        <p>Posts:</p>
+        <ul class="nav nav-pills nav-stacked">
+          <li class="{%ifequal profiletab 'all'%}active{% endifequal %}"><a href="microblog/profile">All</a></li>
+          <li class="{%ifequal profiletab 'shared'%}active{% endifequal %}"><a href="microblog/profile/shared">Shared</a></li>
+          <li class="{%ifequal profiletab 'saved'%}active{% endifequal %}"><a href="microblog/profile/saved">Saved</a></li>
+        </ul>
         <a href="/microblog/editprofile/" class="btn btn-info btn-lg">
           <span class="glyphicon glyphicon-edit"></span> Edit
         </a>
