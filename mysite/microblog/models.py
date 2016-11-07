@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from datetime import datetime
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User as auth_user
 
@@ -31,7 +32,7 @@ class Post(models.Model):
     )
     creator = models.ForeignKey(User)
     timestamp = models.DateTimeField(
-        default = datetime.now)
+        default = timezone.now)
     privacy = models.CharField(
         max_length = 2,
         choices = PRIVACY_CHOICES,
@@ -48,9 +49,9 @@ class Follows(models.Model):
 class Saves(models.Model):
     user = models.ForeignKey(User)
     post = models.ForeignKey(Post)
-    timestamp = models.DateTimeField(default = datetime.now)
+    timestamp = models.DateTimeField(default = timezone.now)
 
 class Shares(models.Model):
     user = models.ForeignKey(User)
     post = models.ForeignKey(Post)
-    timestamp = models.DateTimeField(default = datetime.now)
+    timestamp = models.DateTimeField(default = timezone.now)
