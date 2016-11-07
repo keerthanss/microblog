@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import Textarea
 from models import User
-from dal import autocomplete
+
 class LogInForm(forms.Form):
     username = forms.CharField(widget = forms.TextInput(attrs={'placeholder':'Username', 'required' : True}),
                                     max_length=30)
