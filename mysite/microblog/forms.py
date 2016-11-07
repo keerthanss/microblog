@@ -24,7 +24,8 @@ class PostForm(forms.Form):
                                                         'placeholder':'Start a Rypple..'
                                                     }),
                                     max_length = 256)
-    public_privacy = forms.BooleanField(required=False)
+    public_privacy = forms.BooleanField(widget = forms.CheckboxInput(attrs={'checked':'checked'}),
+                                        required=False)
 
 class EditProfileForm(forms.Form):
     profile_name = forms.CharField(label='Profile Name', max_length=100)

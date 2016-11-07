@@ -48,5 +48,9 @@ class Follows(models.Model):
 class Saves(models.Model):
     user = models.ForeignKey(User)
     post = models.ForeignKey(Post)
-    timestamp = models.DateTimeField(
-        default = datetime.now)
+    timestamp = models.DateTimeField(default = datetime.now)
+
+class Shares(models.Model):
+    user = models.ForeignKey(User)
+    post = models.ForeignKey(Post)
+    timestamp = models.DateTimeField(default = datetime.now)

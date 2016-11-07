@@ -10,22 +10,23 @@
           {% for post in post_set %}
             <div class="panel panel-info">
               <div class="panel-heading">
-                  <h3 class = "panel-title">{{ post.creator.profile_name }} </h3>
+                  <h3 class = "panel-title"> <a href="/microblog/profile/?username={{post.creator.user_name}}">{{ post.creator.profile_name }}</a> </h3>
               </div>
               <div class="panel-body">
                 {{ post.post_content }}
                 <p class = "text-muted text-right small"><span class="glyphicon glyphicon-time"></span> {{post.timestamp}}</p>
-                  {%if post.saved %}
-                    <p class = "text-muted text-right ">
-
+                <p class = "text-muted text-right small">
+                {%if post.saved %}
                     <a href="/microblog/unsave/?username={{request.user.username}}&post={{post.post_id}}">
-                    <span class="glyphicon glyphicon-floppy-saved"></span></a> </p>
+                    <span class="glyphicon glyphicon-floppy-saved"></span></a>
                 {%else%}
-                  <p class = "text-muted text-right ">
-
                   <a href="/microblog/save/?username={{request.user.username}}&post={{post.post_id}}">
-                    <span class="glyphicon glyphicon-floppy-disk"></span></a> </p>
+                    <span class="glyphicon glyphicon-floppy-disk"></span></a>
                 {%endif%}
+                  <a href="/microblog/share/?username={{request.user.username}}&post={{post.post_id}}">
+                    <span class="glyphicon glyphicon-share"></span>
+                  </a>
+                </p>
               </div>
 
             </div>

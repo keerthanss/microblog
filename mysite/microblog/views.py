@@ -7,17 +7,16 @@ from django.http import HttpResponseRedirect
 from .signIn import authenticate, register
 from .logic import *
 from .models import Post
+from django.http import HttpResponseRedirect
+from .signIn import authenticate, register, logoutuser
+from .logic import *
+from .forms import *
 
 def isAuthenticated(request):
     if request.user:
         if request.user.is_authenticated:
             return True
     return False
-
-from django.http import HttpResponseRedirect
-from .signIn import authenticate, register
-from .logic import *
-from .forms import *
 
 def loginpage(request):
     #check if it is a POST request
@@ -74,7 +73,7 @@ def editProfile(request):
     return render(request, 'microblog/editprofile.html', {'form': form})
 
 
-def getPosts(request):
+def homepage(request):
     if not isAuthenticated(request):
         return redirect('index')
 
@@ -104,6 +103,10 @@ def getPosts(request):
     context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form}
     return render(request, 'microblog/homepage.html', context)
 
+def logoutview(request):
+    logoutuser(request)
+    return redirect('index')
+
 def unfollow(request):
     follower=request.GET.get('follower', None)
 
@@ -130,6 +133,12 @@ def unsave(request):
     post = request.GET.get('post',None)
 
     unsavePost(user,post)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def share(request):
+    user = request.GET.get('username', None)
+    post = request.GET.get('post', None)
+    sharePost(user, post)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def getProfile(request):

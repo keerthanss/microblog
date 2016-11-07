@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .Serializers import *
-from .models import User, Post, Follows, Saves
+from .models import User, Post, Follows, Saves, Shares
 from rest_framework import viewsets
 def getPostDetails(username,number):
     queryset = Post.objects.all().order_by('-timestamp')
@@ -41,7 +41,7 @@ def savePost(user,post):
 def unsavePost(user,post):
         user = User.objects.get(user_name = user)
         post = Post.objects.get(post_id = post)
-        
+
         postsSaved= Saves.objects.all().filter(user=user)
         postsSaved= postsSaved.filter(post=post)
 
@@ -97,3 +97,11 @@ def checkFollowing(follower, following):
     if len(allFollowing) >0:
         return True
     return False
+
+def sharePost(user, post):
+    print "user " + str(user) + " wants to share post " + str(post)
+    _user = User.objects.get(user_name=user)
+    _post = Post.objects.get(post_id=post)
+    if _user is not None and _post is not None:
+        share = Shares(user=_user, post=_post)
+        share.save()
