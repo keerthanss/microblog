@@ -33,7 +33,7 @@ def loginpage(request):
             print login_form.cleaned_data
             #TODO: change redirect url
             #return HttpResponseRedirect('profile')
-            return redirect('profile')
+            return redirect('homepage')
         elif register_form.is_valid():
             data = register_form.cleaned_data
             register(data['r_email'], data['r_username'], data['r_password'])
@@ -112,7 +112,7 @@ def homepage(request):
     post_set= getHomePagePosts(username,number)
 
     post_set = addSavedFieldToPostList(post_set,request.user.username)
-    context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form,'searchForm':searchForm}
+    context = {'title' : 'Home', 'post_set':post_set, 'post_form':post_form,'searchForm':SearchForm(),}
     return render(request, 'microblog/homepage.html', context)
 
 def logoutview(request):
