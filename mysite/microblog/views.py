@@ -67,7 +67,7 @@ def editProfile(request):
         print form
         if form.is_valid():
             print "Form is valid"
-            if request.FILES['profile_pic']:
+            if request.FILES.get('filepath',False):
                 user_details.profile_pic=request.FILES['profile_pic']
             #saveProfilePic(request.user.username, request.FILES['profile_pic'])
             form=form.cleaned_data
